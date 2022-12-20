@@ -1,0 +1,29 @@
+
+/*Homework: FSP Models & Java Programs - BanketNoWait
+*
+* 
+* Name: Nejada
+* Surname: Karriqi
+* Name: Jonnatan
+* Surname: Mendoza
+*
+*
+*/
+
+The difference lies in the way threads understand if there is food in the pot.
+
+The first implementation has implemented a "passive wait". For both processes, savage and cook, the corresponding threads enter to waiting set if the pot couldn't
+meet the conditions to make them act. the conditions were: servings = 0 for savages, servings > 0 for the cook, so they had to wait until the got a notification 
+to wake up and continue exacution; notifyAll() was the method called after the events, in order to be sure that the right threads were active and would act when the relevant
+even was on execution ( pot empty or pot full)
+
+At BanketNoWait we have an "active wait" where savage and cook check if there is food in the pot (savage) or if the pot is empty (cook). At the moment they are
+unable to execute and they get the lock on PotNoWait, all they have to do is to release the key and call again the method. By doing this, every thread is effectively 
+polling the pot status, by checking time to time if they can perform their actions. Synchronization ensures us that every interaction with the pot is consistent.
+
+We must keep in mind that for both implementations the methods must be synchronizes in order for the program to work properly. The leak of "synchronized" might 
+lead us to race conditions and inconsistencies.
+
+The resource usage, makes BanketNoWait more expensive. This comes as a result of threads being active all the time for checking if their conditions are true.
+This doesn't happen at "wait-notify" implementation where threads wait until they are awaken, by saving this way processor resources. This is enough to make
+me conclude that in this kind of "situations/applications", wait-notify implementation is a better solution.
